@@ -1,7 +1,7 @@
 ActionBoard
 =======
 
-[![Discord](https://img.shields.io/discord/984425829792628766?label=discord&logo=discord&style=flat-square&logoColor=white)](https://discord.gg/nuHmcUJN)
+[![Discord](https://img.shields.io/discord/984425829792628766?label=discord&logo=discord&style=flat-square&logoColor=white)](https://discord.gg/nuHmcUJN) [![Branch Status](https://img.shields.io/github/checks-status/markdessain/actionboard/main?label=main&logo=github&style=flat-square&logoColor=white)](https://github.com/markdessain/actionboard/tree/main)
 
 
 An overview of all your GitHub Actions in one place made simple.
