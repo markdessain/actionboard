@@ -1,6 +1,9 @@
 ActionBoard
 =======
 
+[![Discord](https://img.shields.io/discord/984425829792628766?label=discord&logo=discord&style=flat-square&logoColor=white)](https://discord.gg/nuHmcUJN)
+
+
 An overview of all your GitHub Actions in one place made simple.
 
 Runs as a single binary with no dependencies or database required. Run ActionBoard locally on your laptop or in any cloud environment. Setup is simple and only required a GitHub Access Token to run.
@@ -9,6 +12,7 @@ Here is a screenshot of the daily overview showing workflows as they run through
 
 ![main page](./docs/main.png)
 
+![](https://discord.gg/zZ6sWVg6NT)
 ## Getting Started
 
 Let's get ActionBoard up and running, here are some ways to get started. The binary is compiled to all operating systems and the Docker image can run on any system where Docker is installed.
