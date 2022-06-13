@@ -15,19 +15,19 @@ Let's get ActionBoard up and running, here are some ways to get started. The bin
 
 ### Running Binary
 
-The simplest way to give ActionBoard a go is to download the latest release from GitHub. You can select the binary for your operating system of choice.
-
+The simplest way to give ActionBoard a go is to download the latest release from GitHub. You can select the binary for your operating system of choice. For example on a Intel Mac:
 
 ```bash
 export $GITHUB_TOKEN=...
 
-curl
+curl -L https://github.com/markdessain/actionboard/releases/download/v0.1.1/actionboard-darwin-amd64 > actionboard
 chmod +x ./actionboard
 ./actionboard \
 --github-token=$GITHUB_TOKEN \
 --repository=tiangolo/fastapi \
 --repository=apache/spark \
---port 8080
+--port=8080 \
+--days=3
 ```
 
 ### Running Docker
@@ -37,12 +37,13 @@ Alternatively you can also run actionboard using docker.
 ```bash
 export $GITHUB_TOKEN=...
 
-docker pull ghcr.io/markdessain/actionboard:0.1.13
-docker run -p 8080:8080 ghcr.io/markdessain/actionboard:0.1.13 \
+docker pull ghcr.io/markdessain/actionboard:0.1.1
+docker run -p 8080:8080 ghcr.io/markdessain/actionboard:0.1.1 \
 --github-token=$GITHUB_TOKEN \
 --repository=tiangolo/fastapi \
 --repository=apache/spark \
---port 8080
+--port=8080 \ 
+--days=3
 ```
 
 
