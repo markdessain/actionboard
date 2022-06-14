@@ -22,7 +22,7 @@ Let's get ActionBoard up and running, here are some ways to get started. The bin
 The simplest way to give ActionBoard a go is to download the latest release from GitHub. You can select the binary for your operating system of choice. For example on a Intel Mac:
 
 ```bash
-export $GITHUB_TOKEN=...
+export GITHUB_TOKEN=...
 
 curl -L https://github.com/markdessain/actionboard/releases/download/v0.1.1/actionboard-darwin-amd64 > actionboard
 chmod +x ./actionboard
@@ -39,7 +39,7 @@ chmod +x ./actionboard
 Alternatively you can also run actionboard using docker.
 
 ```bash
-export $GITHUB_TOKEN=...
+export GITHUB_TOKEN=...
 
 docker pull ghcr.io/markdessain/actionboard:0.1.1
 docker run -p 8080:8080 ghcr.io/markdessain/actionboard:0.1.1 \
@@ -56,7 +56,7 @@ docker run -p 8080:8080 ghcr.io/markdessain/actionboard:0.1.1 \
 In [./example/fly.toml](./example/fly.toml) replace `app = "actionboard-example"`  with your applications name.
 
 ```bash
-export $GITHUB_TOKEN=...
+export GITHUB_TOKEN=...
 
 cd ./example/
 flyctl create --name <APPLICATION_NAME> --org personal
