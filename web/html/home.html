@@ -1,0 +1,306 @@
+{{define "body"}}
+
+
+<style>
+
+    body {
+        margin: 40px;
+    }
+
+    form {
+        font-size: 150%;
+    }
+
+    input {
+        font-size: 150%;
+    }
+
+    options {
+        font-size: 150%;
+    }
+
+
+    .wrapper {
+        display: grid;
+        grid-gap: 2px;
+        color: #444;
+        width: 800px;
+    }
+
+    .box {
+        background-color: #444;
+        color: #fff;
+        /*border-radius: 5px;*/
+        padding: 5px;
+        min-height: 10px;
+        width: 55px
+        /*font-size: 150%;*/
+    }
+
+    .box.label {
+        background-color: #b5b5b5;
+        color: #fff;
+        /*border-radius: 5px;*/
+        padding: 5px;
+        min-width: 250px;
+        /*font-size: 150%;*/
+    }
+
+    .box.completed-success, .box.in_progress-success {
+        background-color: #a1ba5f;
+        color: #fff;
+        /*border-radius: 5px;*/
+        padding: 2px;
+        width: 10px;
+        height: 10px;
+        /*font-size: 50%;*/
+    }
+
+    .box.completed-failure, .box.completed-startup_failure {
+        background-color: #ba5f5f;
+        color: #fff;
+        /*border-radius: 5px;*/
+        padding: 2px;
+        width: 10px;
+        height: 10px;
+        /*font-size: 50%;*/
+    }
+
+    .box.completed-cancelled {
+        background-color: #bbbbbb;
+        color: #fff;
+        /*border-radius: 5px;*/
+        padding: 2px;
+        width: 10px;
+        height: 10px;
+        /*font-size: 50%;*/
+    }
+
+    .box.completed-action_required {
+        background-color: #96bcbd;
+        color: #fff;
+        /*border-radius: 5px;*/
+        padding: 2px;
+        width: 10px;
+        height: 10px;
+        font-size: 50%;
+    }
+
+    .box.in_progress- {
+        background-color: #ba9a5f;
+        color: #fff;
+        /*border-radius: 5px;*/
+        padding: 2px;
+        width: 10px;
+        height: 10px;
+        font-size: 50%;
+    }
+
+    .box.queued-, .box.pending- {
+        background-color: #a885cc;
+        color: #fff;
+        /*border-radius: 5px;*/
+        padding: 2px;
+        width: 10px;
+        height: 10px;
+    }
+</style>
+
+{{ $hours := makeArray 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 }}
+{{ $quarter := makeArray 0 15 30 45 }}
+
+
+<div class="isolate -space-y-px rounded-md shadow-sm">
+    <div class="relative border border-gray-300 rounded-md rounded-b-none px-3 py-2 focus-within:z-10 focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
+
+        <div class="mt-1 relative" x-data="{ isOpen: false }">
+            <button type="button" class="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label"
+                    @click="isOpen = true"
+                    x-on:click.outside="isOpen = false"
+            >
+                {{ range $z := .Zones }}
+
+                {{if $z.Active}}
+                <span class="block truncate"> Timezone: {{ $z.Value }} </span>
+                {{ end }}
+
+                {{ end }}
+                <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+        <!-- Heroicon name: solid/selector -->
+        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </span>
+            </button>
+
+            <ul class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm" tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3"
+                x-show="isOpen"
+
+                x-transition:enter="transition ease-out duration-100"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-100"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0">
+                <!--
+                  Select option, manage highlight styles based on mouseenter/mouseleave and keyboard navigation.
+
+                  Highlighted: "text-white bg-indigo-600", Not Highlighted: "text-gray-900"
+                -->
+                {{ range $z := .Zones }}
+                <li class="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9" id="listbox-option-0" role="option" >
+                    <!-- Selected: "font-semibold", Not Selected: "font-normal" -->
+
+                    <a href="/?timezone={{ $z.Value }}">
+                        <span class="font-normal block truncate">{{ $z.Value }}</span>
+
+                        {{if $z.Active}}
+                        <span class="text-indigo-600 absolute inset-y-0 right-0 flex items-center pr-4">
+                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+                        {{end}}
+                    </a>
+                </li>
+                {{ end }}
+
+                <!-- More items... -->
+            </ul>
+        </div>
+
+
+
+
+    </div>
+    <div class="relative border border-gray-300 rounded-md rounded-t-none rounded-b-none px-3 py-2 focus-within:z-10 focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
+
+
+
+
+
+        <div class="mt-1 relative" x-data="{ isOpen: false }">
+            <button type="button" class="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label"
+                    @click="isOpen = true"
+                    x-on:click.outside="isOpen = false"
+            >
+                {{ range $z := .Dates }}
+
+                {{if $z.Active}}
+                <span class="block truncate"> Date: {{ $z.Value }} </span>
+                {{ end }}
+
+                {{ end }}
+                <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+        <!-- Heroicon name: solid/selector -->
+        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </span>
+            </button>
+
+            <ul class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm" tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3"
+                x-show="isOpen"
+
+                x-transition:enter="transition ease-out duration-100"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-100"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0">
+
+                {{ range $z := .Dates }}
+                <li class="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9" id="listbox-option-0" role="option" >
+                    <a href="/?date={{ $z.Value }}">
+                        <span class="font-normal block truncate">{{ $z.Value }}</span>
+
+                        {{if $z.Active}}
+                        <span class="text-indigo-600 absolute inset-y-0 right-0 flex items-center pr-4">
+                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+                        {{end}}
+                    </a>
+                </li>
+                {{ end }}
+            </ul>
+        </div>
+
+
+
+
+    </div>
+
+    <div class="relative border border-gray-300 rounded-md rounded-t-none px-3 py-2 focus-within:z-10 focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
+
+
+        <fieldset class="space-y-5">
+            <legend class="sr-only"></legend>
+
+            {{ range $z := .Repositories }}
+            <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                    <input id="{{ $z.Value }}" aria-describedby="comments-description" name="{{ $z.Value }}" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded" {{if $z.Active}} checked {{ end }}>
+                </div>
+                <div class="ml-3 text-sm">
+                    <label for="{{ $z.Value }}" class="text-gray-700">{{ $z.Value }}</label>
+                </div>
+            </div>
+            {{ end }}
+        </fieldset>
+        <br />
+    </div>
+
+
+
+
+<br />
+<div class="wrapper">
+    <div class="box label" style="grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 2"></div>
+    {{range $index, $element := $hours}}
+    {{ $aaa := multiply $index 4 }}
+    {{ $bbb := add $aaa 2 }}
+
+    {{ $ccc := add $index 1 }}
+    {{ $ddd := multiply $ccc 4}}
+    {{ $eee := add $ddd 2}}
+
+    <div class="box" style="grid-column-start: {{ $bbb }}; grid-column-end: {{ $eee }}; grid-row-start: 1; grid-row-end: 2">{{ $element }}</div>
+    {{ end }}
+
+    {{ range $i := .Cells }}
+        <div class="box {{  $i.State }}" style="grid-column-start: {{ $i.ColumnStart }}; grid-column-end: {{ $i.ColumnEnd }}; grid-row-start: {{ $i.RowStart }}; grid-row-end: {{ $i.RowEnd }}">
+            {{ $i.Value }}
+
+        </div>
+    {{ end }}
+</div>
+
+
+<!--    <p>{{.Data.Paused}}</p>-->
+
+<!--<ul>-->
+<!--{{range $workflow := .Data.Workflows}}-->
+<!--    <li>{{$workflow.Name}}</li>-->
+<!--{{end}}-->
+<!--</ul>-->
+
+<!--<table>-->
+<!--    <tr>-->
+<!--        <td>Name</td>-->
+<!--        <td>CreatedAt</td>-->
+<!--        <td>UpdatedAt</td>-->
+<!--    </tr>-->
+<!--{{range $workflowRun := .Data.WorkflowRuns}}-->
+<!--    <tr>-->
+<!--        <td>{{$workflowRun.Name}}</td>-->
+<!--        <td>{{$workflowRun.CreatedAt}}</td>-->
+<!--        <td>{{$workflowRun.UpdatedAt}}</td>-->
+<!--    </tr>-->
+<!--{{end}}-->
+<!--</table>-->
+
+{{end}}
+
+

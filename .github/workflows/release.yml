@@ -1,0 +1,105 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions: write-all
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: 'Checkout Github Action'
+        uses: actions/checkout@master
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17.0
+
+      - name: Build Linux 64bit
+        run: |
+          GOOS=linux GOARCH=amd64 go build -o ./actionboard-linux-amd64 ./main.go
+
+      - name: Build Mac 64bit
+        run: |
+          GOOS=darwin GOARCH=amd64 go build -o ./actionboard-darwin-amd64 ./main.go
+
+      - name: Build Windows 64bit
+        run: |
+          GOOS=windows GOARCH=amd64 go build -o ./actionboard-windows-amd64 ./main.go
+
+      - name: Get Tag
+        run: |
+          REF=${{ github.ref_name }}
+          REF="${REF:1}"
+          IMAGE_TAG="actionboard:$REF"
+          echo "IMAGE_TAG=$IMAGE_TAG" >> ${GITHUB_ENV}
+
+      - name: Build Docker
+        run: |
+          cat <<EOT > Dockerfile
+          FROM alpine
+          RUN apk add tzdata
+          COPY ./actionboard /actionboard
+          ENTRYPOINT ["/actionboard"]
+          EOT
+
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./actionboard ./main.go
+
+          docker build -t ghcr.io/markdessain/${{env.IMAGE_TAG }} .
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: true
+          prerelease: false
+          release_name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: upload linux artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./actionboard-linux-amd64
+          asset_name: actionboard-linux-amd64
+          asset_content_type: application/octet-stream
+
+      - name: upload mac artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./actionboard-darwin-amd64
+          asset_name: actionboard-darwin-amd64
+          asset_content_type: application/octet-stream
+
+      - name: upload windows artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./actionboard-windows-amd64
+          asset_name: actionboard-windows-amd64
+          asset_content_type: application/octet-stream
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ github.token }}
+
+      - name: Push Image
+        run: |
+          docker push ghcr.io/markdessain/${{env.IMAGE_TAG }}
+
