@@ -56,9 +56,11 @@ docker run -p 8080:8080 ghcr.io/markdessain/actionboard:0.1.1 \
 In [./example/fly.toml](./example/fly.toml) replace `app = "actionboard-example"`  with your applications name.
 
 ```bash
+export $GITHUB_TOKEN=...
+
 cd ./example/
 flyctl create --name <APPLICATION_NAME> --org personal
-flyctl secrets set GITHUB_TOKEN="..."
+flyctl secrets set GITHUB_TOKEN=$GITHUB_TOKEN
 flyctl deploy
 flyctl scale count 1
 ```

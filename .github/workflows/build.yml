@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - '*'
+    paths:
+      - 'main.go'
+      - 'app/**'
+      - 'web/**'
+      - 'go.mod'
+      - 'go.sum'
 
 permissions: write-all
 
