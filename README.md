@@ -17,7 +17,7 @@ Here is a screenshot of the daily overview showing workflows as they run through
 
 Let's get ActionBoard up and running, here are some ways to get started. The binary is compiled to all operating systems and the Docker image can run on any system where Docker is installed.
 
-### Running Binary
+### Running the Binary
 
 The simplest way to give ActionBoard a go is to download the latest release from GitHub. You can select the binary for your operating system of choice. For example on a Intel Mac:
 
@@ -34,7 +34,7 @@ chmod +x ./actionboard
 --days=3
 ```
 
-### Running Docker
+### Running with Docker
 
 Alternatively you can also run actionboard using docker.
 
